@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regulariza Rural IA</title>
+<style>
+:root{--g:#176b45;--bg:#f3f6f4;--line:#dce6df;--ink:#1d2b24}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--g);color:white;padding:18px 5%;display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+h1{font-size:21px;margin:0}header small{color:#d7eee1}nav{display:flex;gap:7px;flex-wrap:wrap}
+button{cursor:pointer;border:0;border-radius:8px;padding:10px 14px;font-weight:bold;background:var(--g);color:white}
+nav button{background:transparent;border:1px solid #ffffff66;color:white}nav button.active{background:white;color:var(--g)}
+main{max-width:1100px;margin:25px auto;padding:0 18px}.section{display:none}.section.active{display:block}
+.hero,.card,.stat{background:white;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
+.hero{background:#e5f2e9}.hero h2{color:var(--g);margin-top:0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stat strong{display:block;font-size:30px;color:var(--g);margin-top:8px}.muted{color:#63736a}
+form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field.full{grid-column:1/-1}label{display:block;font-weight:bold;font-size:13px;margin-bottom:5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd9cf;border-radius:8px;font:inherit;background:white}textarea{min-height:85px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.secondary{background:#e8f2eb;color:var(--g);border:1px solid #cfe1d4}
+.notice{background:#fff7e5;border:1px solid #eddfb8;border-radius:9px;padding:12px;margin:12px 0;font-size:13px;line-height:1.5}
+.empty{padding:22px;text-align:center;color:#63736a;background:#f8faf8;border:1px dashed #cbd9cf;border-radius:10px}
+table{width:100%;border-collapse:collapse;min-width:600px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:14px}th{background:#f7faf8}.tablewrap{overflow:auto}
+.tag{display:inline-block;background:#e8f2eb;color:var(--g);padding:4px 8px;border-radius:20px;font-size:12px}
+.result{border-left:4px solid #d9a441;background:#fffaf0;padding:12px;margin:10px 0}
+footer{text-align:center;padding:25px;color:#6c7b71;font-size:12px}
+@media(max-width:700px){.grid,form{grid-template-columns:1fr}.field.full{grid-column:auto}header{padding:15px}}
+@media print{header,nav,footer,.no-print{display:none!important}body{background:white}main{margin:0}.section{display:none!important}#analysis{display:block!important}}
+</style></head>
+<body>
+<header><div><h1>🌱 Regulariza Rural IA</h1><small>Organização e análise documental rural</small></div>
+<nav><button class="active" data-tab="home">Início</button><button data-tab="properties">Propriedades</button><button data-tab="documents">Documentos</button><button data-tab="analysis">Análise</button></nav></header>
+<main>
+<section id="home" class="section active">
+<div class="hero"><h2>Gestão documental rural em um só lugar</h2><p>Organize propriedades, registre documentos e acompanhe pontos que precisam de conferência. Protótipo de apoio ao trabalho técnico, sem substituir a análise profissional.</p><div class="actions no-print"><button data-go="properties">Cadastrar propriedade</button><button class="secondary" data-go="documents">Adicionar documento</button></div></div>
+<div class="grid"><div class="stat">Propriedades cadastradas<strong id="cp">0</strong></div><div class="stat">Documentos registrados<strong id="cd">0</strong></div><div class="stat">Apontamentos<strong id="ca">0</strong></div></div>
+<div class="card"><h3>Como utilizar</h3><p>1. Cadastre uma propriedade rural. 2. Registre os documentos vinculados. 3. Na área de análise, anote informações e possíveis divergências para validação técnica.</p><div class="notice">Protótipo demonstrativo: os dados ficam armazenados neste navegador. Não insira documentos reais nem dados pessoais sensíveis nesta versão.</div></div>
+</section>
+<section id="properties" class="section"><h2>Propriedades rurais</h2><div class="card"><h3>Nova propriedade</h3><form id="pf">
+<div><label>Nome da propriedade *</label><input id="pn" required maxlength="100" placeholder="Ex.: Fazenda Boa Esperança"></div>
+<div><label>Produtor / responsável</label><input id="po" maxlength="100"></div>
+<div><label>Município / UF *</label><input id="pm" required maxlength="100" placeholder="Ex.: Solânea / PB"></div>
+<div><label>Área (hectares)</label><input id="pa" type="number" min="0" step=".01"></div>
+<div class="field full"><label>Observações</label><textarea id="pnotes" maxlength="1000"></textarea></div>
+<div class="field full"><button>Salvar propriedade</button></div></form></div><div class="card"><h3>Propriedades cadastradas</h3><div id="plist"></div></div></section>
+<section id="documents" class="section"><h2>Documentos</h2><div class="card"><h3>Novo registro documental</h3><form id="df">
+<div><label>Propriedade *</label><select id="dp" required></select></div>
+<div><label>Tipo de documento *</label><select id="dt" required><option value="">Selecione</option><option>Matrícula Rural</option><option>Cadastro Ambiental Rural (CAR)</option><option>Cadastro da Agricultura Familiar (CAF)</option><option>Contrato de Concessão de Uso (CCU)</option><option>Outro</option></select></div>
+<div><label>Identificação / referência</label><input id="dr" maxlength="100"></div>
+<div><label>Status *</label><select id="ds"><option>Recebido</option><option>Em conferência</option><option>Pendente</option><option>Conferido</option></select></div>
+<div class="field full"><label>Observações para conferência</label><textarea id="dn" maxlength="1200"></textarea></div>
+<div class="field full"><button>Registrar documento</button></div></form><div class="notice">Esta versão registra metadados e observações. Não realiza leitura automática de arquivos, OCR ou análise por inteligência artificial.</div></div><div class="card"><h3>Documentos registrados</h3><div id="dlist"></div></div></section>
+<section id="analysis" class="section"><h2>Análise e conferência</h2><div class="card"><h3>Novo apontamento</h3><form id="af">
+<div><label>Propriedade *</label><select id="ap" required></select></div><div><label>Documento relacionado</label><select id="ad"></select></div>
+<div><label>Classificação *</label><select id="al"><option>Informação</option><option>Atenção</option><option>Pendência</option></select></div>
+<div><label>Título do apontamento *</label><input id="at" required maxlength="120" placeholder="Ex.: Conferir área informada"></div>
+<div class="field full"><label>Descrição e providência recomendada *</label><textarea id="ax" required maxlength="1500"></textarea></div>
+<div class="field full"><button>Salvar apontamento</button></div></form></div>
+<div class="card"><h3>Relatório demonstrativo</h3><label>Propriedade para o relatório</label><select id="rp"></select><div id="report" class="empty" style="margin-top:12px">Selecione uma propriedade para visualizar o relatório.</div><div class="actions no-print"><button id="print">Imprimir / salvar em PDF</button></div></div></section>
+</main><footer>Regulariza Rural IA • Protótipo demonstrativo • Apoio à organização documental, sujeito à conferência profissional.</footer>
+<script>
+const K='rria_demo_v1';let db={p:[],d:[],a:[]};try{db=Object.assign(db,JSON.parse(localStorage.getItem(K)||'{}'))}catch(e){}
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function save(){localStorage.setItem(K,JSON.stringify(db));render()}
+function go(id){document.querySelectorAll('.section').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));window.scrollTo(0,0);report()}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>go(b.dataset.tab));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
+$('pf').onsubmit=e=>{e.preventDefault();db.p.push({id:Date.now().toString(),n:$('pn').value.trim(),o:$('po').value.trim(),m:$('pm').value.trim(),area:$('pa').value,notes:$('pnotes').value.trim()});e.target.reset();save();go('properties')};
+$('df').onsubmit=e=>{e.preventDefault();if(!db.p.length){alert('Cadastre uma propriedade primeiro.');return}db.d.push({id:Date.now().toString(),pid:$('dp').value,t:$('dt').value,r:$('dr').value.trim(),s:$('ds').value,n:$('dn').value.trim()});e.target.reset();save();go('documents')};
+$('af').onsubmit=e=>{e.preventDefault();db.a.push({id:Date.now().toString(),pid:$('ap').value,did:$('ad').value,l:$('al').value,t:$('at').value.trim(),x:$('ax').value.trim()});e.target.reset();save();go('analysis')};
+function pname(id){return db.p.find(x=>x.id===id)?.n||'—'}
+function report(){let id=$('rp').value;if(!id){$('report').className='empty';$('report').textContent='Selecione uma propriedade para visualizar o relatório.';return}let p=db.p.find(x=>x.id===id),ds=db.d.filter(x=>x.pid===id),as=db.a.filter(x=>x.pid===id);$('report').className='';$('report').innerHTML=`<div id="printArea"><h2>Relatório demonstrativo de conferência documental</h2><p><b>Propriedade:</b> ${esc(p.n)}<br><b>Município:</b> ${esc(p.m)}<br><b>Responsável:</b> ${esc(p.o||'Não informado')}<br><b>Emissão:</b> ${new Date().toLocaleDateString('pt-BR')}</p><h3>Documentos (${ds.length})</h3>${ds.length?ds.map(d=>`<p>• ${esc(d.t)} — ${esc(d.s)} ${esc(d.r)}</p>`).join(''):'<p>Nenhum documento registrado.</p>'}<h3>Apontamentos (${as.length})</h3>${as.length?as.map(a=>`<div class="result"><b>${esc(a.l)}: ${esc(a.t)}</b><p>${esc(a.x)}</p></div>`).join(''):'<p>Nenhum apontamento registrado.</p>'}<div class="notice">Relatório de apoio gerado a partir dos registros informados. Não constitui laudo, parecer jurídico ou validação automática.</div></div>`}
+$('rp').onchange=report;$('print').onclick=()=>{if(!$('rp').value){alert('Selecione uma propriedade.');return}window.print()};
+function render(){
+$('cp').textContent=db.p.length;$('cd').textContent=db.d.length;$('ca').textContent=db.a.length;
+let opts='<option value="">Selecione uma propriedade</option>'+db.p.map(p=>`<option value="${p.id}">${esc(p.n)} — ${esc(p.m)}</option>`).join('');
+['dp','ap','rp'].forEach(id=>{let old=$(id).value;$(id).innerHTML=opts;if(db.p.some(p=>p.id===old))$(id).value=old});
+let dopt='<option value="">Não especificado</option>'+db.d.map(d=>`<option value="${d.id}">${esc(pname(d.pid))} — ${esc(d.t)}</option>`).join('');let old=$('ad').value;$('ad').innerHTML=dopt;if(db.d.some(d=>d.id===old))$('ad').value=old;
+$('plist').innerHTML=db.p.length?'<div class="tablewrap"><table><tr><th>Propriedade</th><th>Município</th><th>Área</th><th>Responsável</th><th></th></tr>'+db.p.map(p=>`<tr><td>${esc(p.n)}</td><td>${esc(p.m)}</td><td>${esc(p.area||'—')}</td><td>${esc(p.o||'—')}</td><td><button class="secondary" data-del-p="${p.id}">Excluir</button></td></tr>`).join('')+'</table></div>':'<div class="empty">Nenhuma propriedade cadastrada.</div>';
+$('dlist').innerHTML=db.d.length?'<div class="tablewrap"><table><tr><th>Propriedade</th><th>Documento</th><th>Referência</th><th>Status</th><th></th></tr>'+db.d.map(d=>`<tr><td>${esc(pname(d.pid))}</td><td>${esc(d.t)}</td><td>${esc(d.r||'—')}</td><td><span class="tag">${esc(d.s)}</span></td><td><button class="secondary" data-del-d="${d.id}">Excluir</button></td></tr>`).join('')+'</table></div>':'<div class="empty">Nenhum documento registrado.</div>';
+document.querySelectorAll('[data-del-p]').forEach(b=>b.onclick=()=>{if(confirm('Excluir propriedade e registros relacionados?')){let id=b.dataset.delP;db.p=db.p.filter(x=>x.id!==id);db.d=db.d.filter(x=>x.pid!==id);db.a=db.a.filter(x=>x.pid!==id);save()}});
+document.querySelectorAll('[data-del-d]').forEach(b=>b.onclick=()=>{if(confirm('Excluir registro documental?')){db.d=db.d.filter(x=>x.id!==b.dataset.delD);save()}});
+report()}
+render();
+</script></body></html>
